@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobeNews Live — News Across the Solar System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="brand">
+        <span class="logo"></span>
+        <div class="brandText">
+          <h1>Globe<span>News</span></h1>
+          <span class="tag">solar system · live world headlines</span>
+        </div>
+      </div>
+      <div class="search">
+        <input id="search" type="text" placeholder="Search news topics…" autocomplete="off" />
+        <button id="searchBtn">Search</button>
+      </div>
+      <select id="tf" title="Time frame">
+        <option value="24">Last 24 hours</option>
+        <option value="48">Last 2 days</option>
+        <option value="168">Last 7 days</option>
+      </select>
+      <button id="settingsBtn" class="iconBtn" title="Settings">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+      <button id="solarViewBtn" class="sunBtn hidden" title="Back to full solar system">Solar view</button>
+    </header>
+
+    <div class="layout">
+      <main id="stage">
+        <div id="hint">Drag to look around · scroll to zoom · click Earth to zoom in, then a country for its news</div>
+        <div id="webglFallback">Your browser doesn't support WebGL — this mode needs a GPU/WebGL-capable browser.</div>
+      </main>
+      <div id="panelHandle" title="Drag to resize"></div>
+      <div id="planetInfo" class="hidden">
+        <button id="planetInfoClose" title="Close">✕</button>
+        <div class="piHead"><span class="piDot"></span><span class="piName">—</span><span class="piType"></span></div>
+        <div class="piGrid"></div>
+        <div class="piFact"></div>
+      </div>
+      <aside id="panel">
+        <div id="panelHead">
+          <span id="panelTitle">Loading global stories…</span>
+          <button id="clearFilter" title="Back to world">Back to world</button>
+        </div>
+        <div id="catBar"><select id="catSel" title="Filter by category" aria-label="News category filter"></select></div>
+        <div id="newsList"></div>
+      </aside>
+    </div>
+
+    <footer id="tickerBar">
+      <div class="liveTag"><span class="pulse"></span><span id="liveLabel">LIVE · last 2 min</span></div>
+      <div class="ticker" id="ticker">
+        <div class="tickerInner" id="tickerInner"></div>
+      </div>
+    </footer>
+
+    <div id="modalOverlay" class="hidden">
+      <div id="settingsModal">
+        <div class="sHead"><h2>Settings</h2><button id="modalClose" class="iconBtn">✕</button></div>
+        <div class="sBody">
+
+          <section>
+            <h3>Appearance</h3>
+            <div class="row"><label for="optTheme">Theme</label>
+              <select id="optTheme">
+                <option value="cosmic">Cosmic (solar system)</option>
+                <option value="glass">macOS liquid glass</option>
+              </select></div>
+            <div class="row"><label for="optQuality">3D quality</label>
+              <select id="optQuality">
+                <option value="high">High</option>
+                <option value="med">Medium</option>
+                <option value="low">Low (easiest on memory)</option>
+              </select></div>
+            <div class="row"><label for="optStars">Starfield</label><input type="checkbox" id="optStars" /></div>
+            <div class="row"><label for="optOrbits">Orbit rings</label><input type="checkbox" id="optOrbits" /></div>
+            <div class="row"><label for="optLabels">Planet labels</label><input type="checkbox" id="optLabels" /></div>
+            <div class="row"><label for="optMoon">Earth's moon</label><input type="checkbox" id="optMoon" /></div>
+            <div class="row"><label for="optSunGlow">Sun glow</label><input type="checkbox" id="optSunGlow" /></div>
+          </section>
+
+          <section>
+            <h3>News</h3>
+            <div class="row"><label for="optNewsRefresh">Live feed refresh every</label>
+              <select id="optNewsRefresh">
+                <option value="10">10 seconds</option>
+                <option value="20">20 seconds</option>
+                <option value="30">30 seconds</option>
+                <option value="45">45 seconds</option>
+                <option value="60">60 seconds</option>
+              </select></div>
+            <div class="row"><label for="optPanelAuto">Auto-refresh results panel</label><input type="checkbox" id="optPanelAuto" /></div>
+            <div class="row"><label for="optDefaultTf">Default time frame</label>
+              <select id="optDefaultTf">
+                <option value="24">Last 24 hours</option>
+                <option value="48">Last 2 days</option>
+                <option value="168">Last 7 days</option>
+              </select></div>
+            <div class="row"><label for="optNewsImages">Show thumbnail images</label><input type="checkbox" id="optNewsImages" /></div>
+          </section>
+
+          <section>
+            <h3>Motion</h3>
+            <div class="row"><label for="optAutoRotate">Auto-rotate camera</label><input type="checkbox" id="optAutoRotate" /></div>
+            <div class="row"><label for="optOrbitSpeed">Solar-system speed</label>
+              <select id="optOrbitSpeed">
+                <option value="0.5">0.5×</option>
+                <option value="1">1× (standard)</option>
+                <option value="2">2×</option>
+                <option value="4">4× fast</option>
+                <option value="8">8× time-lapse</option>
+              </select></div>
+          </section>
+
+          <div class="sFoot">
+            <div id="savedToast" class="hidden">✓ Settings saved</div>
+            <button id="resetBtn" class="dangerBtn">Reset to defaults</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="solar-data.js"></script>
+  <script src="solar.js"></script>
+  <script src="solar-ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

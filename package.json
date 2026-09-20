@@ -1,0 +1,34 @@
+{
+  "name": "news-globe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "country-code-lookup": "^0.1.5",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.11.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.22.0"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "node_modules/world-atlas/**/*.json",
+      "node_modules/country-code-lookup/**/*"
+    ],
+    "targets": [
+      "node22-win-x64",
+      "node22-linux-x64"
+    ]
+  }
+}
