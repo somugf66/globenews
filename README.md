@@ -15,7 +15,23 @@ Built with an **Express** backend (Google News RSS proxy -> JSON, no API key req
 
 ## Run it
 
-### Docker (recommended)
+### Deploy from image (fastest — recommended on another machine)
+
+```bash
+docker pull ghcr.io/somugf66/globenews:latest
+docker run -d --name globenews -p 5556:5556 ghcr.io/somugf66/globenews
+# open http://localhost:5556
+```
+
+Updating an existing container:
+
+```bash
+docker pull ghcr.io/somugf66/globenews:latest
+docker stop globenews && docker rm globenews
+docker run -d --name globenews -p 5556:5556 ghcr.io/somugf66/globenews
+```
+
+### Docker (build from source)
 
 ```bash
 docker build -t globenews .
